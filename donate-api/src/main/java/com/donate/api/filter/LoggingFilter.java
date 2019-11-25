@@ -6,7 +6,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.UUID;
 
-import com.donate.api.util.ConstKey;
+import com.donate.commmon.model.ConstKeys;
 import org.slf4j.MDC;
 
 public class LoggingFilter implements Filter {
@@ -18,15 +18,15 @@ public class LoggingFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         boolean clear = false;
-        if (MDC.get(ConstKey.TRACE_ID) == null) {
+        if (MDC.get(ConstKeys.TRACE_ID) == null) {
             clear = true;
-            MDC.put(ConstKey.TRACE_ID, UUID.randomUUID().toString());
+            MDC.put(ConstKeys.TRACE_ID, UUID.randomUUID().toString());
 
             HttpSession session = ((HttpServletRequest) request).getSession(false);
-            if (session != null && session.getAttribute(ConstKey.MAG_USER_ID) != null
-                    && session.getAttribute(ConstKey.MAG_LOGIN_NAME) != null) {
-                MDC.put(ConstKey.MAG_USER_ID, (String) session.getAttribute(ConstKey.MAG_USER_ID));
-                MDC.put(ConstKey.MAG_LOGIN_NAME, (String) session.getAttribute(ConstKey.MAG_LOGIN_NAME));
+            if (session != null && session.getAttribute(ConstKeys.MAG_USER_ID) != null
+                    && session.getAttribute(ConstKeys.MAG_LOGIN_NAME) != null) {
+                MDC.put(ConstKeys.MAG_USER_ID, (String) session.getAttribute(ConstKeys.MAG_USER_ID));
+                MDC.put(ConstKeys.MAG_LOGIN_NAME, (String) session.getAttribute(ConstKeys.MAG_LOGIN_NAME));
             }
         }
 
