@@ -113,7 +113,7 @@ public class ApiCommon {
                     outputStream.writeBytes(boundaryLine);
                     outputStream.writeBytes(String.format(fileDataTemplate, "file" + i, fileNameArr[i]));
 
-                    int bytesRead;
+//                    int bytesRead;
                     while((bytesRead = fileArr[i].read(buffer, 0, buffer.length)) != -1) {
                         outputStream.write(buffer, 0, bytesRead);
                     }
