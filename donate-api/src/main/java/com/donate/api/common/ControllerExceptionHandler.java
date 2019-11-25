@@ -1,7 +1,7 @@
 package com.donate.api.common;
 
 import com.alibaba.fastjson.JSONArray;
-import com.donate.commmon.model.ServiceResult;
+import com.donate.common.model.ServiceResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;

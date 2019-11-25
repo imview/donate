@@ -1,4 +1,4 @@
-package com.donate.commmon.model;
+package com.donate.common.model;
 
 public class ConstKeys {
 	public final static String TRACE_ID="traceId";

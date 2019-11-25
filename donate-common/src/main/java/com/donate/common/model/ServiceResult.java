@@ -1,4 +1,4 @@
-package com.donate.commmon.model;
+package com.donate.common.model;
 
 import java.util.HashMap;
 import java.util.Map;

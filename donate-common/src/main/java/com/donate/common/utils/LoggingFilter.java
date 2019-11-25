@@ -1,6 +1,6 @@
 package com.donate.common.utils;
 
-import com.donate.commmon.model.ConstKeys;
+import com.donate.common.model.ConstKeys;
 import org.apache.log4j.MDC;
 
 import javax.servlet.*;
