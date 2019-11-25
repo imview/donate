@@ -1,5 +1,8 @@
 package com.donate.common.utils;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class IdWorker {
 	
 	
