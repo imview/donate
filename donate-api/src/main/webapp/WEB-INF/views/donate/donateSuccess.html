@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>感谢您的捐助</title>
+    <link rel="stylesheet" href="font/iconfont.css"/>
+    <link rel="stylesheet" href="css/css.css">
+    <script src="js/jquery-2.2.3.min.js"></script>
+    <script src="js/flex.js"></script>
+    <script src="js/vue.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/jweixin-1.2.0.js"></script>
+    
+    <script type="text/javascript">    
+        
+    window.onpageshow = function(e)
+    {
+        // 如果从缓存读取，则重新加载页面
+        if(e.persisted)
+        {
+            window.location.reload(true);   
+        }
+    }  
+    
+      var domainUrl = document.documentURI.substring(0,document.documentURI.indexOf("/static/")); 
+     // var shareUrl =  location.href ;// domainUrl + "/static/donateShare.html?donateId=" + getQueryString("donateId") + "&type=success";  // location.href
+      var shareUrl = domainUrl + "/static/donateSuccess.html?donateId=" + getQueryString("donateId") + "&type=share";
+        wxShareData = {
+            title: "我支持广东长江公益的爱心捐赠，一起来吧！",
+            desc: '注入充满爱的公益力量，传播善良，播种公益，欢迎一起来！',
+            link: shareUrl, //location.href
+            imgUrl: domainUrl + '/static/img/logo.jpg',
+            trigger: function (res) {
+                //alert('用户点击发送给朋友');
+            },
+            success: function (res) {
+                //alert('已分享');
+            },
+            cancel: function (res) {
+                //alert('已取消');
+            },
+            fail: function (res) {
+                //alert(JSON.stringify(res));
+            }
+        };
+        
+        wxCofig = {};        
+        $(function () {
+            $.ajax({
+                async: true,
+                type: "get",
+                data: "url=" + encodeURIComponent(location.href.split('#')[0]),  // location.href,    
+                url: "../system/getJsapiSignature",
+                success: function (data) {      
+                	if(data.isSuccess)
+                	{
+	                    wxCofig.appId = data.dicData.appId;
+	                    wxCofig.timestamp = data.dicData.timestamp; //jsConfig.Timestamp;
+	                    wxCofig.nonceStr = data.dicData.nonceStr; //.jsConfig.Noncestr;
+	                    wxCofig.signature = data.dicData.signature; //.jsConfig.Signdata;
+	                    wx.config({
+	                        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+	                        appId: wxCofig.appId, // 必填，公众号的唯一标识
+	                        timestamp: wxCofig.timestamp, // 必填，生成签名的时间戳
+	                        nonceStr: wxCofig.nonceStr, // 必填，生成签名的随机串
+	                        signature: wxCofig.signature, // 必填，签名，见附录1
+	                        jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareWeibo', 'hideMenuItems','showMenuItems'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+	                    });
+	
+	
+	                    //微信分享config
+	                    wx.ready(function () {
+	                        // 要隐藏的菜单项，所有menu项见附录3
+	                        wx.hideMenuItems({
+	                        	   menuList: [
+	                                 //  'menuItem:share:appMessage',    // 发送给朋友
+	                                 //  'menuItem:share:timeline',      // 分享到朋友圈	                                   
+	                                //   'menuItem:favorite',        // 收藏	                                
+                                    //   'menuItem:setFont',         // 调整字体     
+                                    
+                                       'menuItem:exposeArticle',   // 举报
+                                       'menuItem:share:qq',        // QQ
+	                                   'menuItem:share:facebook',  // facebook
+	                                   'menuItem:share:QZone',     //  QQ 空间	                                   
+	                                   'menuItem:editTag',         // 编辑标签
+	                                   'menuItem:delete',          // 删除
+	                                   'menuItem:readMode',        // 阅读模式
+	                                   'menuItem:openWithQQBrowser', // 在QQ浏览器中打开
+	                                   'menuItem:share:email',     // 邮件
+	                                   'menuItem:openWithSafari',   // 在Safari
+	                                   'menuItem:copyUrl',         //  复制链接
+	                                   'menuItem:share:brand'      // 一些特殊公众号                          
+	                                   ]
+	                        });
+	                        wx.showMenuItems({
+	                            menuList : [ 'menuItem:share:appMessage', // 发送给朋友
+	                            'menuItem:share:timeline', // 分享到朋友圈                                     
+	                            'menuItem:favorite', // 收藏                                  
+	                            'menuItem:setFont' ]
+	                        // 调整字体 ] // 要显示的菜单项，所有menu项见附录3
+	                        });
+	                        // 分享给朋友
+	                        wx.onMenuShareAppMessage(wxShareData);
+	                        
+	                        // 分享给朋友圈
+	                        wx.onMenuShareTimeline(wxShareData);	                        
+	                      
+	                    });
+	                    wx.error(function (res) {
+	                       // alert("errMsg:" + res.errMsg);
+	                    });
+                	}
+                	else
+               		{
+               		   // alert("签名失败：" + data.message);
+               		}
+
+                }
+            });
+        });
+      
+    </script>
+</head>
+<body>
+    <div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">    
+        <img src="img/logo.jpg">
+     </div>
+    <div class="container share-bg" id="app">
+        <div class="share-box">
+            <div class="share-top">
+                <img class="img" v-bind:src="headImgUrl" onerror='this.src="img/noheadimg.png"' />
+                <div class="user-info">
+                    <span>{{schoolClass}}{{period}}</span>
+                    <span><strong>{{name}}</strong> 同学</span>                   
+                </div>
+            </div>
+            <div class="share-bottom">
+                <div id="successpassdiv">感谢您通过</div>
+                <div id="passdiv">已通过</div>
+                <div>广东长江公益献出爱心</div>
+                <div class="share-money">&yen;<span>{{amount}}</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="share-btn-box" id="successdiv" >
+        <a class="confirm-btn btn share-btn" href="javascript:void(0);">让爱扩散</a>
+        <a class="confirm-btn btn" href="donate/donateAdd.html">再次乐捐</a>
+    </div>
+    <div class="padding" id="sharediv" > 
+        <a class="confirm-btn btn share-btn" href="system/oauth.html?action=/static/donate/donateAdd.html">一起乐捐</a>
+    </div>
+
+    <div class="layer-share">
+        <i class="share-pic"></i>
+    </div>
+    <script>
+    
+    var type = getQueryString("type");
+    if(type!=null && type=="success")
+    {
+        // 感谢您的捐助
+        $("#successdiv").show();
+        $("#sharediv").hide();  
+        document.title = '感谢您的捐助';
+        $("#successpassdiv").show();  
+        $("#passdiv").hide();  
+    }
+    else 
+    {   
+        // 一起乐捐
+        $("#successdiv").hide();
+        $("#sharediv").show();  
+        document.title = '一起乐捐';
+        $("#successpassdiv").hide();  
+        $("#passdiv").show();  
+    }
+    
+        $(function () {
+            $(".share-btn").on("click",function(){
+                $(".layer-share").fadeIn();
+            });
+            $(".layer-share").on("click",function(){
+                $(this).fadeOut();
+            });
+        });
+        
+        var app = new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                	rm: {
+                		donateId: getQueryString("donateId")
+                    },                
+                	schoolClass: '', 
+                	period: '', 
+                	name: '', 
+                	amount: '0.00', 
+                    headImgUrl: 'img/noimg.png'              	
+                }                                                 
+            },
+            created: function () {
+                _self = this; 
+                
+                $.ajax({
+                    type: 'post',
+                    url: '../donate/getDonateDetail',
+                    data: _self.rm, 
+                    success: function (result) {               
+                        if (result.isSuccess) {
+                            _self.schoolClass = result.dicData.schoolClass;
+                            _self.period = result.dicData.period;
+                            _self.name = result.dicData.name;
+                            _self.headImgUrl = result.dicData.headImgUrl;
+                            _self.amount = result.dicData.amountStr;
+                        }
+                    }
+                });
+            }
+        });        
+       
+    </script>
+</body>
+</html>

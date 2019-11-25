@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="format-detection" content="telephone=no" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>一起乐捐</title>
+<link rel="stylesheet" href="../../../resources/font/iconfont.css" />
+<link rel="stylesheet" href="../../../resources/css/css.css">
+<script src="../../../resources/js/jquery-2.2.3.min.js"></script>
+<script src="../../../resources/js/flex.js"></script>
+<script src="../../../resources/js/vue.min.js"></script>
+<script src="../../../resources/js/main.js"></script>
+</head>
+<body>
+	<div class="container share-bg" id="app">
+		<div class="share-box">
+			<div class="share-top">
+				<img class="img"  <img class="img" v-bind:src="headImgUrl"/>/>
+				<div class="user-info">
+					<span>{{schoolClass}}{{period}}</span> <span><strong>{{name}}</strong> 同学</span>
+				</div>
+			</div>
+			<div class="share-bottom">
+				<div>已通过</div>
+				<div>广东长江公益献出爱心</div>
+				<div class="share-money">
+					&yen;<span>{{amount}}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="padding">
+		<a class="confirm-btn btn share-btn" href="donate/donateAdd.html">一起乐捐</a>
+	</div>
+
+	<script>
+		$(function() {
+			$(".share-btn").on("click", function() {
+				$(".layer-share").fadeIn();
+			});
+			$(".layer-share").on("click", function() {
+				$(this).fadeOut();
+			});
+		});
+
+		var app = new Vue({
+			el : '#app',
+			data : function() {
+				 return {
+	                    rm: {
+	                        donateId: getQueryString("donateId")
+	                    },                
+	                    schoolClass: '',  
+	                    period: '',   
+	                    name: '', 
+	                    amount: '0.00',   
+	                    headImgUrl: 'img/noimg.png'
+	                }            
+			},
+            created: function () {
+                _self = this; 
+                
+                $.ajax({
+                    type: 'post',
+                    url: '../donate/getDonateInfo',
+                    data: _self.rm, 
+                    success: function (result) {               
+                        if (result.isSuccess) {
+                            _self.schoolClass = result.dicData.schoolClass;
+                            _self.period = result.dicData.period; 
+                            _self.name = result.dicData.name;
+                            _self.amount = (result.dicData.amount==null ? '0.00' : toThousands(result.dicData.amount.toFixed(2)));   
+                            _self.headImgUrl: result.dicData.headImgUrl;
+                        }
+                    }
+                });
+            }
+		});
+	</script>
+
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!-- <!DOCTYPE html> -->
+<html lang="en">
+<head>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>捐款记录</title>
+    <link rel="stylesheet" href="../../../resources/font/iconfont.css"/>
+    <link rel="stylesheet" href="../../../resources/css/css.css">
+    <script src="../../../resources/js/flex.js"></script>
+    <script src="../../../resources/js/jquery-2.2.3.min.js"></script>
+    <script src="../../../resources/js/iscroll-probe.js"></script>
+    <script src="../../../resources/js/vue.min.js"></script>
+    <script src="../../../resources/js/main.js"></script>
+    <script src="../../../resources/js/jweixin-1.2.0.js"></script>
+    <script src="../../../resources/js/wxconfig.js"></script>
+</head>
+<body>
+<div style="margin:0 auto;width:0px;height:0px;overflow:hidden;">
+    <img src="img/logo.jpg">
+</div>
+<div class="container" id="app">
+    <nav class="nav-list">
+        <div class="nav-title">爱心捐款总计(元)</div>
+        <div class="nav-money">{{totalAmount}}</div>
+    </nav>
+    <a class="myrecord-total" href="myDonateDetail.html"> <span
+            class="myrecord-title">我的捐款记录</span>
+        <span href="mydonatedetail.html" class="myrecord-money">{{myTotalAmount}}元<i
+                class="iconfont icon-turn-right"></i></span>
+    </a>
+
+    <div id="projectScroll" class="scroller-top2">
+        <div class="scroller" id="scroller">
+            <!--下拉提示-->
+            <div id="pullDown" class="none">
+            </div>
+            <section class="record-list myrecord-list" v-if="items.length>0">
+                <div class="record-item" v-for="item in items">
+                    <img class="img" v-bind:src='item.headImgUrl'
+                         onerror='this.src="img/noheadimg.png"'/>
+                    <div class="record-user"><span
+                            style="display:inline-block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:4.5rem">{{item.name}}</span>
+                    </div>
+                    <div class="record-time">{{item.createTimeStr | formatDateStr}}</div>
+                    <div class="record-money">+{{item.amountStr}}</div>
+                </div>
+            </section>
+
+            <div>
+                <div class="record-list myrecord-list">
+                    <div class="no-record" v-if="items.length==0">暂无记录！</div>
+                </div>
+            </div>
+            <!--上拉提示-->
+            <div id="pullUp" class="none">
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    /*以下为iScroll脚本=================================================>> */
+
+    settingWxConfig("../system/getJsapiSignature");
+
+
+    window.onpageshow = function (e) {
+        // 如果从缓存读取，则重新加载页面
+        if (e.persisted) {
+            window.location.reload(true);
+        }
+    };
+
+    var myScroll;
+
+    function load() {
+
+        pullDown = $("#pullDown"),
+            pullUp = $("#pullUp"),
+            loadingStep = 0;//加载状态0默认，1显示加载状态，2执行加载数据，只有当为0时才能再次加载，这是防止过快拉动刷新
+
+        pullDown.hide();
+        pullUp.hide();
+
+        myScroll = new IScroll("#projectScroll", {
+            mouseWheel: false,
+            scrollY: true,
+            probeType: 2,
+            bindToWrapper: true,
+            momentum: true// 允许有惯性滑动
+        });
+        myScroll.on("scroll", function () {
+            if (loadingStep == 0 && !pullDown.attr("class").match('refresh|loading') && !pullUp.attr("class").match('refresh')) {
+                if (this.y > 40) {//下拉刷新操作
+                    pullDown.attr("class", "").addClass("refresh").show();
+                    loadingStep = 1;
+                    // myScroll.refresh();
+                } else if (this.y < (this.maxScrollY - 14)) {//上拉加载更多
+                    pullUp.attr("class", "").addClass("refresh").show();
+                    loadingStep = 1;
+                    //pullUpAction();
+                }
+            }
+            if ((this.y < this.maxScrollY) && (this.pointY < 1)) {
+                this.scrollTo(0, this.maxScrollY, 400);
+                return;
+            } else if (this.y > 0 && (this.pointY > window.innerHeight - 1)) {
+                this.scrollTo(0, 0, 400);
+                return;
+            }
+        });
+        myScroll.on("scrollEnd", function () {
+            if (loadingStep == 1) {
+                if (pullDown.attr("class").match("refresh")) {//下拉刷新操作
+                    pullDown.removeClass("refresh").addClass("loading");
+                    loadingStep = 2;
+                    pullDownAction(myScroll);
+                } else {
+                    pullUp.removeClass("refresh").addClass("loading");
+                    loadingStep = 2;
+                    pullUpAction(myScroll);
+                }
+            }
+        });
+
+        //上拉刷新回调
+        function pullUpAction() {
+            app.rm.pageSize = 20;
+            app.rm.type = 0;
+            // 设置最旧数据的时间
+            _self.rm.time = getDonateTime(0, app.items);
+            app.refreshData();
+
+            setTimeout(function () {
+                myScroll.refresh();
+                loadingStep = 0;
+            }, 2000);
+        }
+
+        //下拉结束后调用，数据在这里装载
+        function pullDownAction() {
+            app.rm.pageSize = 10000;
+            app.rm.type = 1;
+            // 设置最新数据的时间
+            _self.rm.time = getDonateTime(1, app.items);
+            app.refreshData();
+
+            setTimeout(function () {
+                myScroll.refresh();
+                loadingStep = 0;
+                pullDown.slideUp(function () {
+                    pullDown.attr('class', 'none');
+                })
+            }, 1000);
+        }
+
+        document.addEventListener('touchmove', function (e) {
+            e.preventDefault();
+        }, false);
+    }
+
+    document.addEventListener('DOMContentLoaded', load, false);
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    var app = new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                rm: {
+                    pageIndex: 1,
+                    pageSize: 20,
+                    time: "",
+                    type: 0
+                },
+                totalAmount: '0.00',
+                myTotalAmount: '0.00',
+                items: []
+            }
+        },
+        created: function () {
+            _self = this;
+
+            // 刷新捐助总额
+            refreshTotalAmount();
+
+            // 我的捐助总金额
+            $.ajax({
+                type: 'post',
+                url: '../donate/getMyTotalAmount',
+                data: "openId=" + getUserInfo().openId, //
+                success: function (result) {
+                    if (result.isSuccess) {
+                        _self.myTotalAmount = (result.dicData.myTotalAmount == null ? "0.00" : toThousands(result.dicData.myTotalAmount.toFixed(2)));
+                    }
+                }
+            });
+
+            // 列表数据
+            $.ajax({
+                type: 'post',
+                url: '../donate/getAllDonateList',
+                data: _self.rm,
+                success: function (result) {
+                    if (result.isSuccess) {
+                        _self.items = result.dicData.recordList;
+                        setTimeout(function () {
+                            myScroll.refresh();
+                        }, 1000);
+                    }
+                }
+            });
+        },
+        methods: {
+            refreshData: function () {
+                var _self = this;
+
+                // 刷新捐助总额
+                refreshTotalAmount();
+
+                $.ajax({
+                    type: 'post',
+                    url: '../donate/getAllDonateList',
+                    data: _self.rm,
+                    success: function (result) {
+                        if (result.isSuccess) {
+
+                            if (result.dicData.recordList.length > 0)
+                                $("#pullUp").attr('class', 'none');
+                            else
+                                $("#pullUp").attr('class', 'nodate').html("<font style='font-size: 0.42667rem'>没有更多数据了</font>");
+
+                            if (result.dicData.recordList.length > 0) {
+                                if (_self.rm.pageSize == 10000)   // 刷新的情况
+                                {
+                                    _self.items = result.dicData.recordList.concat(app.items);
+                                } else {
+                                    _self.items = app.items.concat(result.dicData.recordList);
+                                }
+
+                                setTimeout(function () {
+                                    myScroll.refresh();
+                                }, 200);
+                            }
+
+                            if (_self.items.length == 0) {
+                                $("#pullUp").attr('class', 'none');
+                                $("#pullUp").hide();
+                            }
+                        }
+                    }
+                });
+            }
+        },
+        filters: {
+            formatDateStr: function (time) {
+                var today = new Date().Format("yyyy-MM-dd");
+                return time.replace(today + " ", "");
+            }
+        }
+    });
+
+    function refreshTotalAmount() {
+        // 捐助总金额
+        $.ajax({
+            type: 'post',
+            url: '../donate/getTotalAmount',
+            data: "",
+            success: function (result) {
+                if (result.isSuccess) {
+                    _self.totalAmount = (result.dicData.totalAmount == null ? '0.00' : toThousands(result.dicData.totalAmount.toFixed(2)));
+                }
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

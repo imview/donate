@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="format-detection" content="telephone=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>我要捐款</title>
+    <link rel="stylesheet" href="../../../resources/font/iconfont.css" />
+    <link rel="stylesheet" href="../../../resources/css/css.css?t=12">
+    <script src="../../../resources/js/jquery-2.2.3.min.js"></script>
+    <script src="../../../resources/js/flex.js"></script>
+    <script src="../../../resources/js/vue.min.js"></script>
+    <script src="../../../resources/js/main.js"></script>
+    <script src="../../../resources/js/jweixin-1.2.0.js"></script>
+    <script src="../../../resources/js/wxconfig.js"></script>
+    <style>
+        [v-cloak] {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+<div style="margin: 0 auto; width: 0px; height: 0px; overflow: hidden;">
+    <img src="../../../resources/img/logo.jpg">
+</div>
+<div class="container index-bg" id="app" v-cloak>
+    <section class="input-wrap">
+        <div class="input-box">
+            <input type="number" class="input money" placeholder="捐款金额"
+                   v-model="model.amount" maxlength="20"> <span class="unit">元</span>
+        </div>
+        <div class="input-box">
+            <input type="text" class="input name" maxlength="100" placeholder="姓名"
+                   v-model="model.name">
+        </div>
+        <div class="input-box select-time">
+            <div class="input placeholder classPeriod"
+                 v-bind:class="{hasvalue:classPeriod!='请选择班期'}">{{classPeriod}}</div>
+            <i class="iconfont icon-turn-down"></i>
+        </div>
+        <div class="input-box">
+            <input type="tel" maxlength="11" class="input mobile"
+                   placeholder="手机号（选填 ）" v-model="model.mobile">
+        </div>
+        <a class="confirm-btn btn margin" href="javascript:;"
+           v-on:click="save">奉献爱心</a>
+        <!--我要捐助2.html-->
+        <div class="define">
+            <i class="dot"></i>款项将捐献到广东长江公益资助的教育、医疗或其他项目。捐款300元及以上的爱心校友,
+            如需公益事业捐赠收据, 请联系020-38355371, 郑女士。
+        </div>
+        <a class="link" href="/static/donatelist.html">查看捐款记录</a>
+    </section>
+</div>
+
+
+<div class="layer-select">
+    <div class="select-content">
+        <div class="title">选择班期</div>
+        <div class="scroll">
+            <ul class="scroll-left"></ul>
+            <ul class="scroll-right"></ul>
+        </div>
+        <div class="link-box">
+            <a href="javascript:;" class="link btn-click">确定</a> <a
+                href="javascript:;" class="link link-cancel">取消</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onpageshow = function(e) {
+        if (e.persisted) {
+            window.location.reload(true);
+        }
+        else {
+
+        }
+    };
+    settingWxConfig("../system/getJsapiSignature");
+
+    $(function() {
+        var data = [ {
+            "text" : "FMBA",
+            "child" : [ {
+                "text" : "2019级"
+            }, {
+                "text" : "2018级"
+            }, {
+                "text" : "2017级"
+            }, {
+                "text" : "2016级"
+            }, {
+                "text" : "2015级"
+            }, {
+                "text" : "2014级"
+            }, {
+                "text" : "2013级"
+            }, {
+                "text" : "2012级"
+            }, {
+                "text" : "2011级"
+            }, {
+                "text" : "2010级"
+            }, {
+                "text" : "2009级"
+            } ]
+        }, {
+            "text" : "EMBA",
+            "child" : [ {
+                "text" : "32期"
+            }, {
+                "text" : "31期"
+            }, {
+                "text" : "30期"
+            }, {
+                "text" : "29期"
+            }, {
+                "text" : "28期"
+            }, {
+                "text" : "27期"
+            }, {
+                "text" : "26期"
+            }, {
+                "text" : "25期"
+            }, {
+                "text" : "24期"
+            }, {
+                "text" : "23期"
+            }, {
+                "text" : "22期"
+            }, {
+                "text" : "21期"
+            }, {
+                "text" : "20期"
+            }, {
+                "text" : "19期"
+            }, {
+                "text" : "18期"
+            }, {
+                "text" : "17期"
+            }, {
+                "text" : "16期"
+            }, {
+                "text" : "15期"
+            }, {
+                "text" : "14期"
+            }, {
+                "text" : "13期"
+            }, {
+                "text" : "12期"
+            }, {
+                "text" : "11期"
+            }, {
+                "text" : "10期"
+            }, {
+                "text" : "09期"
+            }, {
+                "text" : "08期"
+            }, {
+                "text" : "07期"
+            }, {
+                "text" : "06期"
+            }, {
+                "text" : "05期"
+            }, {
+                "text" : "04期"
+            }, {
+                "text" : "03期"
+            }, {
+                "text" : "02期"
+            }, {
+                "text" : "首期"
+            } ]
+        }, {
+            "text" : "MBA",
+            "child" : [ {
+                "text" : "2019级"
+            }, {
+                "text" : "2018级"
+            }, {
+                "text" : "2017级"
+            }, {
+                "text" : "2016级"
+            }, {
+                "text" : "2015级"
+            }, {
+                "text" : "2014级"
+            }, {
+                "text" : "2013级"
+            }, {
+                "text" : "2012级"
+            }, {
+                "text" : "2011级"
+            }, {
+                "text" : "2010级"
+            }, {
+                "text" : "2009级"
+            }, {
+                "text" : "2008级"
+            }, {
+                "text" : "2007级"
+            }, {
+                "text" : "2006级"
+            }, {
+                "text" : "2005级"
+            }, {
+                "text" : "2004级"
+            }, {
+                "text" : "2003级"
+            } ]
+        }, {
+            "text" : "创创·百度长江",
+            "child" : [ {
+                "text" : "4期"
+            }, {
+                "text" : "3期"
+            }, {
+                "text" : "2期"
+            }, {
+                "text" : "1期"
+            } ]
+        }, {
+            "text" : "创创·青藤长江",
+            "child" : [ {
+                "text" : "5期"
+            }, {
+                "text" : "4期"
+            }, {
+                "text" : "3期"
+            }, {
+                "text" : "2期"
+            }, {
+                "text" : "1期"
+            } ]
+        }, {
+            "text" : "DBA",
+            "child" : [ {
+                "text" : "7期"
+            }, {
+                "text" : "6期"
+            }, {
+                "text" : "5期"
+            }, {
+                "text" : "4期"
+            }, {
+                "text" : "3期"
+            }, {
+                "text" : "2期"
+            }, {
+                "text" : "1期"
+            } ]
+        }, {
+            "text" : "EE·CEO",
+            "child" : [ {
+                "text" : "14期"
+            }, {
+                "text" : "13期"
+            }, {
+                "text" : "12期"
+            }, {
+                "text" : "11期"
+            }, {
+                "text" : "10期"
+            }, {
+                "text" : "09期"
+            }, {
+                "text" : "08期"
+            }, {
+                "text" : "07期"
+            }, {
+                "text" : "06期"
+            }, {
+                "text" : "05期"
+            }, {
+                "text" : "04期"
+            }, {
+                "text" : "03期"
+            }, {
+                "text" : "02期"
+            }, {
+                "text" : "01期"
+            } ]
+        }, {
+            "text" : "EE·总裁",
+            "child" : [ {
+                "text" : "17期"
+            }, {
+                "text" : "16期"
+            }, {
+                "text" : "15期"
+            }, {
+                "text" : "14期"
+            }, {
+                "text" : "13期"
+            }, {
+                "text" : "12期"
+            }, {
+                "text" : "11期"
+            }, {
+                "text" : "10期"
+            }, {
+                "text" : "09期"
+            }, {
+                "text" : "08期"
+            }, {
+                "text" : "07期"
+            }, {
+                "text" : "06期"
+            }, {
+                "text" : "05期"
+            }, {
+                "text" : "04期"
+            }, {
+                "text" : "03期"
+            }, {
+                "text" : "02期"
+            }, {
+                "text" : "01期"
+            } ]
+        }, {
+            "text" : "EE·文创+",
+            "child" : [ {
+                "text" : "4期"
+            }, {
+                "text" : "3期"
+            }, {
+                "text" : "2期"
+            }, {
+                "text" : "1期"
+            } ]
+        }, {
+            "text" : "EE·接力",
+            "child" : [ {
+                "text" : "7期"
+            }, {
+                "text" : "6期"
+            }, {
+                "text" : "5期"
+            }, {
+                "text" : "4期"
+            }, {
+                "text" : "3期"
+            }, {
+                "text" : "2期"
+            }, {
+                "text" : "1期"
+            } ]
+        }, {
+            "text" : "其它",
+            "child" : [ {
+                "text" : ""
+            } ]
+        } ];
+
+        var html = "";
+        var html2 = "";
+        //初始值
+        for (var i = 0; i < data.length; i++) {
+            html += '<li>' + data[i].text + '</li>';
+        }
+        for (var j = 0; j < data[0].child.length; j++) {
+            html2 += '<li>' + data[0].child[j].text + '</li>';
+        }
+        $(".scroll-left").append(html);
+        $(".scroll-right").append(html2);
+        $(".scroll-left li:first").addClass("active");
+        $(".scroll-right li:first").addClass("active");
+
+        var _y, y;
+        $('.scroll ul').on(
+            'touchstart',
+            function(e) {
+                var _touch = e.originalEvent.targetTouches[0];
+                var str = $(this)[0].style.transform, ely = 0;
+                if (str != "") {
+                    var translate = str.substring(str.indexOf("(") + 1,
+                        str.lastIndexOf(","));
+                    ely = translate.split(',')[1];
+                }
+                _y = _touch.pageY - parseFloat(ely);
+                e.preventDefault();
+            });
+        $('.scroll ul').on('touchmove', function(e) {
+            var _touch = e.originalEvent.targetTouches[0];
+            y = _touch.pageY - _y;
+            var th = $(this);
+            var liHeight = th.find("li").height();
+            if (y > liHeight) {
+                y = liHeight
+            }
+            //最大的拖动距离
+            var max = Math.abs(liHeight * (th.find("li").length - 2));
+            if (max < Math.abs(y)) {
+                y = -max;
+            }
+            transform($(this), 0, y);
+            e.preventDefault();
+        });
+
+        $('.scroll ul').on(
+            'touchend',
+            function(e) {
+                var th = $(this);
+                var _touch = e.originalEvent.changedTouches[0];
+                y = _touch.pageY - _y;
+                var liHeight = th.find("li").height();
+                var index = Math.round(y / liHeight);
+
+                if (index >= 1) {
+                    index = 1;
+                    th.find("li").removeClass("active").eq(0).addClass(
+                        'active');
+                } else {
+                    //可以移动的最大单位为li的个数和减1
+                    var max = Math.abs(th.find("li").length - 2);
+                    if (max < Math.abs(index)) {
+                        index = -max;
+                    }
+                    th.find("li").removeClass("active").eq(
+                        Math.abs(index) + 1).addClass('active');
+                }
+                //最后定位在第几个
+                transform(th, 300, index * liHeight);
+                //如果移动的是左边，则右边要跟着联动，并让右则回到初始位置
+                if (th.hasClass("scroll-left")) {
+                    var di = index;
+                    if (di > 0) {
+                        di = 0
+                    } else {
+                        di = Math.abs(di) + 1
+                    }
+                    var rightData = data[Math.abs(di)].child;
+                    var html3 = "";
+                    for (var i = 0; i < rightData.length; i++) {
+                        html3 += '<li>' + rightData[i].text + '</li>';
+                    }
+                    $(".scroll-right").html(html3);
+                    transform($(".scroll-right"), 300, $(
+                        ".scroll-right li").height());
+                    $(".scroll-right li:first").addClass("active");
+                }
+            });
+        $(".btn-click").click(
+            function() {
+                var leftValue = $(".scroll-left .active").text();
+                if (leftValue == "") {
+                    leftValue = $(".scroll-left li:first").text();
+                }
+                var rightValue = $(".scroll-right .active").text();
+                if (rightValue == "") {
+                    rightValue = $(".scroll-right li:first").text();
+                }
+                $(".layer-select").fadeOut();
+                $(".layer-select .select-content").removeClass(
+                    "fadeInUp").addClass("fadeOutDown");
+                /* $(".select-time .input").text(
+                        leftValue + "，" + rightValue); */
+                if (!$(".placeholder").hasClass("hasvalue")) {
+                    $(".placeholder").addClass("hasvalue");
+                }
+                $(".input-box .classPeriod").removeClass("input-error");
+                vm.model.schoolClass = leftValue;
+                vm.model.period = rightValue;
+            });
+
+        $(".select-time").on(
+            "click",
+            function() {
+                $(".layer-select").fadeIn();
+                $(".layer-select .select-content").removeClass(
+                    "fadeOutDown").addClass("fadeInUp");
+                init($(this), data);
+            });
+        $(".link-cancel").on(
+            "click",
+            function() {
+                $(".layer-select").fadeOut();
+                $(".layer-select .select-content").removeClass(
+                    "fadeInUp").addClass("fadeOutDown");
+            });
+        /*          $(".confirm-btn").on(
+         "click",
+         function() {
+         var moneyVal = $(".input-box .money").val();
+         if (!moneyVal) {
+         $(".input-box .money").addClass("input-error")
+         .attr("placeholder", "请填写捐款金额");
+         return false;
+         }
+         window.location.href = "我要捐助2.html";
+         }); */
+        $(".input-box .money").on("focus", function() {
+            $(this).removeClass("input-error").attr("placeholder", "捐款金额");
+        });
+
+        $(".input-box .name").on("focus", function() {
+            $(this).removeClass("input-error");
+        });
+
+        $(".input-box .mobile").on("focus", function() {
+            $(this).removeClass("input-error");
+        });
+
+        $('.layer-select').on('touchmove', function(e) {
+            e.preventDefault();
+        }, false);
+
+        //关闭错误提示
+        $('.tips-layer-btn').on("click", function() {
+            $(this).parents('.tips-layer').fadeOut();
+        });
+
+        $("input[type='number']").blur(function() {
+            var v = $(this).val();
+            if (v == null || v == "")
+                return;
+            //处理前面的0
+            while (v.indexOf('0') == 0) {
+                if (v.substring(1, 2) == ".") {
+                    break;
+                } else{
+                    v = v.substring(1);
+                }
+            }
+
+            if (v.indexOf('.') < 0) {//补充小数点后面两个0
+                if(v==""){
+                    $(this).val("0.00");
+                }
+                else {
+                    $(this).val(v + ".00");
+                }
+            } else {
+                var l = v.length - v.indexOf('.') - 1;
+                if (l == 1) {
+                    $(this).val(v + "0");//补充一位小数
+                } else if (l > 2) {
+                    $(this).val(v.substring(0, v.indexOf('.') + 3));//截断两位小数后面的数据
+                } else {
+                    $(this).val(v);
+                }
+            }
+        });
+        $("input[type='number']").keydown(function(event) {
+            //限制长度
+            var v = $(this).val();
+            if (v == null || v == "")
+                return true;
+
+            if (event.keyCode == 8)
+                return true;
+            else if (v.length >= $(this).attr("maxlength")) {
+                return false;
+            } else {
+                return true;
+            }
+        });
+
+    });
+    function transform(th, duration, offsety) {
+        var style = th[0].style;
+        style.webkitTransitionDuration = duration + 'ms';
+        style.transitionDuration = duration + 'ms';
+        style.transitionTimingFunction = 'ease-in-out';
+        style.webkitTransitionTimingFunction = 'ease-in-out';
+        style.webkitTransform = 'translate3d(0, ' + offsety + 'px, 0)';
+        style.transform = 'translate3d(0, ' + offsety + 'px, 0)';
+    }
+    function init(th, data) {
+        var liHeight = $(".scroll li").height();
+        var value = th.find(".input").text();
+
+        if (value == "" || value == "请选择班期") {
+            transform($(".scroll-left"), 0, liHeight);
+            transform($(".scroll-right"), 0, liHeight);
+        } else {
+            var v = value.split('，');
+            var frist = 0, s = 0;
+            var rightData;
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].text == v[0]) {
+                    frist = i;
+                    rightData = data[i].child;
+                    for (var j = 0; j < data[i].child.length; j++) {
+                        if (data[i].child[j].text == v[1]) {
+                            s = j;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+
+            var html3 = "";
+            for (var i = 0; i < rightData.length; i++) {
+                html3 += '<li>' + rightData[i].text + '</li>';
+            }
+            $(".scroll-right").html(html3);
+
+            if (frist == 0) {
+                transform($(".scroll-left"), 0, liHeight);
+            } else {
+                transform($(".scroll-left"), 0, -(frist - 1) * liHeight);
+                //debugger;
+            }
+            if (s == 0) {
+                transform($(".scroll-right"), 0, liHeight);
+            } else {
+                transform($(".scroll-right"), 0, -(s - 1) * liHeight);
+            }
+        }
+    }
+    var vm = new Vue({
+        el : '#app',
+        data : function() {
+            return {
+                model : {
+                    schoolClass : null,
+                    period : null
+                },
+                user : {}
+            }
+        },
+        created : function() {
+            var _self = this;
+            _self.user = getUserInfo();
+            var oldModel = localStorage.getUserData("createOrder_model");
+            if (oldModel != null)
+                _self.model = oldModel;
+        },
+        updated : function() {
+
+        },
+        methods : {
+            save : function() {
+                var _self = this;
+                var moneyVal = $(".input-box .money").val();
+                if (!moneyVal) {
+                    $(".input-box .money").addClass("input-error").attr(
+                        "placeholder", "请填写捐款金额");
+                    $.ucsalert("捐款金额请输入数字。");
+                    return false;
+                }
+                if (moneyVal < 0.01) {
+                    $.ucsalert("捐款金额请大于0.01。");
+                    $(".input-box .money").addClass("input-error");
+                    return false;
+                } else if (moneyVal > 100000) {
+                    $(".input-box .money").addClass("input-error");
+                    $.ucsalert("捐款金额已超出限额，请再次输入。");
+                    return false;
+                }
+
+                if(_self.model.name==null || _self.model.name==""){
+                    $(".input-box .name").addClass("input-error");
+                    $.ucsalert("请输入真实姓名。");
+                    return false;
+                }
+
+                if (_self.model.schoolClass == null
+                    || _self.model.schoolClass == ""
+                    || _self.model.period == null) {
+                    $(".input-box .classPeriod").addClass("input-error");
+                    $.ucsalert("请选择班期。");
+                    return false;
+                }
+
+
+                if (_self.model.mobile > ""
+                    && !(/^1\d{10}$/.test(_self.model.mobile))) {
+                    $(".input-box .mobile").addClass("input-error");
+                    $.ucsalert("请输入正确的手机号码。");
+                    return false;
+                }
+
+                localStorage.setUserData("createOrder_model", _self.model);
+                _self.model.openId = _self.user.openId;
+                $.ucsajax({
+                    type : 'post',
+                    apiurl : "/donate/donate",
+                    apidata : _self.model,
+                    apisuccess : function(result) {
+                        location = "../../../resources/wxOrder/pay.html?donateId="
+                            + result.dicData.donateId;
+                        //location.replace("../../../resources/wxOrder/pay.html?donateId=" + result.dicData.donateId);
+                    }
+                });
+            }
+        },
+        computed : {
+            classPeriod : function() {
+                var _self = this;
+                if (_self.model.schoolClass == null
+                    || _self.model.schoolClass == ""
+                    || _self.model.period == null) {
+                    return "请选择班期";
+                }
+                else if (_self.model.period=="") {
+                    return _self.model.schoolClass
+                } else {
+                    return _self.model.schoolClass + "，" + _self.model.period;
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

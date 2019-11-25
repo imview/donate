@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="format-detection" content="telephone=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>我要捐款</title>
+    <link rel="stylesheet" href="../../../resources/font/iconfont.css" />
+    <link rel="stylesheet" href="../../../resources/css/css.css">
+    <script src="../../../resources/js/jquery-2.2.3.min.js"></script>
+    <script src="../../../resources/js/flex.js"></script>
+    <script src="../../../resources/js/vue.min.js"></script>
+    <script src="../../../resources/js/main.js"></script>
+    <style>
+        [v-cloak] {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="app" v-cloak></div>
+
+<script type="text/javascript">
+    window.onpageshow = function(e) {
+        if (e.persisted) {
+            window.location.reload(true);
+        }
+        else {
+            var vm = new Vue(
+                {
+                    el : '#app',
+                    data : function() {
+                        return {
+                            msg : "getUser授权中……"
+                        }
+                    },
+                    created : function() {
+                        var _self = this;
+
+                        var action = getUrlKey("action");
+                        var code = getUrlKey("code");
+                        var wxCode = localStorage.getObject("wxCode");
+                        if (wxCode != null && wxCode.code == code) {
+                            //location.href = "/static/system/oauth.html?action=/static/donate/donateAdd.html";
+                            location.replace("/WEB-INF/views/system/oauth.html?action=/WEB-INF/views/donate/donateAdd.html")
+                        }
+                        else {
+                            localStorage.setObject("wxCode", {
+                                code : code
+                            });
+                            $.ucsajax({
+                                type : 'post',
+                                apiurl : "/user/getUserInfo",
+                                apidata : {
+                                    code : code
+                                },
+                                apisuccess : function(result) {
+                                    localStorage.setObject("user", result.dicData);
+                                    //location.replace(action);
+                                    location.href = action
+                                }
+                            });
+                        }
+                    },
+                    updated : function() {
+
+                    },
+                    methods : {
+
+                    },
+                    computed : {
+
+                    }
+                });
+        }
+    }
+</script>
+
+</body>
+</html>
