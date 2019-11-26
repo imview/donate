@@ -83,7 +83,6 @@ public class DonateService {
      */
     public List<Donate> selectDonateByPagin(Pagination pagin) throws Exception {
     	
-    	@SuppressWarnings("unchecked")
 		List<Donate> donateList= donateMapper.selectByPagination(pagin);
 		return donateList;
     	
