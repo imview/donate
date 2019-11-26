@@ -1,5 +1,7 @@
 package com.donate.common.properties;
 
+import com.donate.common.utils.PropertiesUtils;
+import com.donate.common.utils.SysConfigUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -7,9 +9,6 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
 import java.util.Properties;
-
-//import com.ucs.fw.utils.PropertiesUtils;
-//import com.ucs.fw.utils.SysConfigUtil;
 
 public class CustomizedPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {
 
@@ -28,8 +27,8 @@ public class CustomizedPropertyPlaceholderConfigurer extends PropertyPlaceholder
 			}
 			LOG.debug("key= " + keyStr + " , value=" + value);
 		}
-//		PropertiesUtils.setInitProperty(props);
-//		SysConfigUtil.setProperties(props);
+		PropertiesUtils.setInitProperty(props);
+		SysConfigUtil.setProperties(props);
 
 	}
 

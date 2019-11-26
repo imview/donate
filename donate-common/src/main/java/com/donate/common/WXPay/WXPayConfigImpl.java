@@ -2,7 +2,7 @@ package com.donate.common.WXPay;
 
 //import com.github.wxpay.sdk.*;
 import com.donate.common.properties.WxMpConfig;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

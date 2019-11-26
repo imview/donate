@@ -64,7 +64,7 @@
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-jasper</artifactId>
-            <scope>provided</scope><!---->
+            <scope>provided</scope>
         </dependency>
 
         <!-- json -->
@@ -103,7 +103,6 @@
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis-spring</artifactId>
         </dependency>
-        <!---->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus</artifactId>
@@ -121,6 +120,7 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
+        <!---->
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
@@ -131,10 +131,12 @@
             <artifactId>dozer</artifactId>
         </dependency>
 
+
+        <!-- weixin -->
+        <!-- 企业号 -->
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.1</version>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-cp</artifactId>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -147,13 +149,6 @@
         <dependency>
             <groupId>com.github.binarywang</groupId>
             <artifactId>weixin-java-pay</artifactId>
-        </dependency>
-
-        <!-- weixin -->
-        <!-- 企业号 -->
-        <dependency>
-            <groupId>com.github.binarywang</groupId>
-            <artifactId>weixin-java-cp</artifactId>
         </dependency>
 
         <dependency>
@@ -178,18 +173,6 @@
             <id>sit</id>
             <properties>
                 <env>sit</env>
-            </properties>
-        </profile>
-        <profile>
-            <id>prd</id>
-            <properties>
-                <env>prd</env>
-            </properties>
-        </profile>
-        <profile>
-            <id>prd2</id>
-            <properties>
-                <env>prd2</env>
             </properties>
         </profile>
         <profile>

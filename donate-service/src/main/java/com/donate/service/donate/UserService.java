@@ -1,6 +1,5 @@
 package com.donate.service.donate;
 
-import com.donate.common.utils.BeanMapperUtil;
 import com.donate.dao.entity.User;
 import com.donate.dao.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;

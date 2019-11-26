@@ -12,9 +12,6 @@ import org.jboss.logging.Logger;
 import org.springframework.core.NestedIOException;
 import org.springframework.util.ReflectionUtils;
 
-/**
- * @author Marius Bogoevici
- */
 public class VFSUtil {
 
     private static final Logger logger = Logger.getLogger(VFSUtil.class);

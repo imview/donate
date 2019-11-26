@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import org.apache.commons.lang.StringUtils;
 //import org.jboss.spring.vfs.VFSResourceLoader;
 import org.springframework.util.ResourceUtils;
 
