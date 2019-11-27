@@ -14,10 +14,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-//import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-//@EnableTransactionManagement(proxyTargetClass = true)
+@EnableTransactionManagement(proxyTargetClass = true)
 public class DataSourceConfig {
     @Autowired
     AppProperty appProperty;

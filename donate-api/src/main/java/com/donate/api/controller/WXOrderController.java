@@ -16,6 +16,9 @@ import com.github.binarywang.wxpay.util.SignUtils;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +30,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.Document;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -95,7 +97,7 @@ public class WXOrderController {
 	@RequestMapping(value="getJSSDKCallbackData",method = RequestMethod.POST)
 	@ApiOperation(value = "支付回调", notes = "支付回调",  produces = MediaType.APPLICATION_JSON_VALUE)
 	public void getJSSDKCallbackData(HttpServletRequest request,
-                                     HttpServletResponse response)throws IOException,DocumentException,Exception {
+                                     HttpServletResponse response)throws IOException, DocumentException,Exception {
 	    LogInterface logBO=new LogInterface();
   	    logBO.setCreateTime(new Date());
   	    logBO.setId(UUID.randomUUID().toString());
