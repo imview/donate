@@ -2,10 +2,11 @@ package com.donate.service.donate;
 
 import com.donate.common.model.Pagination;
 import com.donate.common.model.ServiceResult;
+import com.donate.common.utils.StringUtils;
 import com.donate.dao.entity.Donate;
 import com.donate.dao.entity.WxOrder;
 import com.donate.dao.mapper.DonateMapper;
-import org.apache.commons.lang3.StringUtils;
+//import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

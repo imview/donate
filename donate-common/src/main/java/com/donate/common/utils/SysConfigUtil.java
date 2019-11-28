@@ -7,10 +7,13 @@ import java.io.StringReader;
 import java.util.Properties;
 import org.apache.commons.io.IOUtils;
 //import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SysConfigUtil {
-    private static final Logger logger = Logger.getLogger(SysConfigUtil.class);
+//    private static final Logger logger = Logger.getLogger(SysConfigUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(SysConfigUtil.class.getName());
     private static Properties properties = null;
 
     public SysConfigUtil() {

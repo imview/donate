@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.donate.dao.mapper.UserMapper">
+
+    <select id="getUserByOpenId" resultType="com.donate.dao.entity.User" parameterType="java.lang.String" >
+
+    select open_id, nick_name, sex, province, city, country, head_img_url, privilege, union_id,
+      create_time, update_time,raw_head_img_url
+    from user
+    where open_id = #{openId}
+  </select>
+
+    <select id="getUserByRawHeadImgUrl" resultType="com.donate.dao.entity.User" parameterType="java.lang.String" >
+    select open_id, nick_name, sex, province, city, country, head_img_url, privilege, union_id,
+      create_time, update_time,raw_head_img_url
+    from user
+    where raw_head_img_url = #{rawHeadImgUrl}d
+  </select>
+
+    <insert id="insert" parameterType="com.donate.dao.entity.User" >
+
+    insert into user (open_id, nick_name, sex, province, city, country, head_img_url,raw_head_img_url,
+      privilege, union_id, create_time, update_time)
+    values (#{openId}, #{nickName}, #{sex}, #{province}, #{city},
+      #{country}, #{headImgUrl},#{rawHeadImgUrl}, #{privilege}, #{unionId},
+      sysdate(),sysdate())
+  </insert>
+
+    <update id="updateByOpenId" parameterType="com.donate.dao.entity.User" >
+
+        update user
+        <set>
+            <if test="nickName!=null">nick_name = #{nickName},</if>
+            <if test="sex!=null">sex = #{sex},</if>
+            <if test="province!=null">province = #{province},</if>
+            <if test="city!=null">city = #{city},</if>
+            <if test="country!=null">country = #{country},</if>
+            <if test="headImgUrl!=null">head_img_url = #{headImgUrl},</if>
+            <if test="rawHeadImgUrl!=null">raw_head_img_url = #{rawHeadImgUrl},</if>
+            <if test="privilege!=null">privilege = #{privilege},</if>
+            <if test="unionId!=null">unionId = #{unionId},</if>
+        </set>
+        ,update_time = sysdate()
+        where open_id = #{openId}
+    </update>
+</mapper>

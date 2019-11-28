@@ -7,6 +7,7 @@ import com.donate.dao.entity.WxOrder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface WxOrderMapper extends BaseMapper<WxOrder> {
@@ -14,7 +15,7 @@ public interface WxOrderMapper extends BaseMapper<WxOrder> {
 
     List<WxOrder> selectByPagination(Pagination pagination);
 
-    int updateByPrimaryKeySelective(WxOrder wxOrder);
+    Integer updateByPrimaryKeySelective(WxOrder wxOrder);
 
-    DonateOrder getDonateOrder(String orderNo);
+    Map getDonateOrder(String orderNo);
 }

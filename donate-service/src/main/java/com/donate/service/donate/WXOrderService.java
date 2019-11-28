@@ -10,13 +10,14 @@ import com.donate.common.model.ServiceResult;
 import com.donate.common.model.ServiceResultT;
 import com.donate.common.properties.WxMpConfig;
 import com.donate.common.utils.IdWorker;
+import com.donate.common.utils.StringUtils;
 import com.donate.dao.entity.Donate;
 import com.donate.dao.entity.DonateOrder;
 import com.donate.dao.entity.LogInterface;
 import com.donate.dao.entity.WxOrder;
 import com.donate.dao.mapper.WxOrderMapper;
-import com.github.binarywang.wxpay.constant.WxPayConstants.SignType;
-import org.apache.commons.lang3.StringUtils;
+//import com.github.binarywang.wxpay.constant.WxPayConstants.SignType;
+//import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +75,7 @@ public class WXOrderService {
  	 
 	    if(result.getIsSuccess() 
 	    	&& donate != null
-	        && StringUtils.isNoneBlank(donate.getId())){
+	        && StringUtils.isNotBlank(donate.getId())){
 	    	  
 	 		 try {
  
@@ -204,7 +205,7 @@ public class WXOrderService {
 		data.put("timeStamp",Long.toString(System.currentTimeMillis()).substring(0,10));
 		data.put("package", "prepay_id="+prepayId);
 		data.put("nonceStr", WXPayUtil.generateNonceStr());
-		data.put("signType",SignType.MD5);
+		data.put("signType", String.valueOf(WXPayConstants.SignType.MD5));
 		
 		
 		String sign = "";
@@ -252,8 +253,8 @@ public class WXOrderService {
 		return wxOrderMapper.updateByPrimaryKeySelective(wxOrder);
 	}
 	
-	public DonateOrder getDonateOrder(String orderNo)throws Exception{
-		DonateOrder donateOrder = wxOrderMapper.getDonateOrder(orderNo);
+	public Map getDonateOrder(String orderNo)throws Exception{
+		Map donateOrder = wxOrderMapper.getDonateOrder(orderNo);
 		
 		return donateOrder;
 	}

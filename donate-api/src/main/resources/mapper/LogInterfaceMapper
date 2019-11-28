@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.donate.dao.mapper.LogInterfaceMapper">
+
+    <select id="getLogInterfaceById" resultMap="com.donate.dao.entity.LogInterface" parameterType="String" >
+
+    select id, open_id, wx_order_no, url, request, response, create_time
+    from log_interface
+    where id = #{id}
+    </select>
+
+     <insert id="addLogInterface" parameterType="com.donate.dao.entity.LogInterface" >
+        insert into  log_interface (id, open_id, wx_order_no, url, request, response,create_time)
+        values (#{id}, #{openId}, #{wxOrderNo}, #{url}, #{request},#{response},sysdate())
+     </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.donate.dao.entity.donate.LogInterface" >
+
+        update log_interface
+        <set>
+            <if test="openId!=null">open_id=#{openId},</if>
+            <if test="wx_order_no!=null">open_id=#{wxOrderNo},</if>
+            <if test="url!=null">open_id=#{url},</if>
+            <if test="request!=null">open_id=#{request},</if>
+            <if test="response!=null">open_id=#{response},</if>
+            <if test="create_time!=null">open_id=#{createTime}</if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

@@ -5,7 +5,7 @@ import com.donate.common.model.ConstKeys;
 import javax.servlet.*;
 import java.io.IOException;
 import java.util.UUID;
-import org.apache.log4j.MDC;
+//import org.apache.log4j.MDC;
 public class LoggingFilter implements Filter {
 
 
@@ -19,18 +19,18 @@ public class LoggingFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		boolean clear = false;
-		if (MDC.get(ConstKeys.TRACE_ID) == null) {
-			clear = true;
-			MDC.put(ConstKeys.TRACE_ID, UUID.randomUUID().toString());
-		}
-
-		try {
-			chain.doFilter(request, response);
-			
-		} finally {
-			if (clear)
-				MDC.clear();
-		}
+//		if (MDC.get(ConstKeys.TRACE_ID) == null) {
+//			clear = true;
+//			MDC.put(ConstKeys.TRACE_ID, UUID.randomUUID().toString());
+//		}
+//
+//		try {
+//			chain.doFilter(request, response);
+//
+//		} finally {
+//			if (clear)
+//				MDC.clear();
+//		}
 	}
 
 	@Override

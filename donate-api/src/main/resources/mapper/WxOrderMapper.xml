@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.donate.dao.mapper.WxOrderMapper">
+
+
+    <select id="selectByPagination" resultType="com.donate.dao.entity.WxOrder" parameterType="com.donate.common.model.Pagination">
+
+        select `no`, donate_id, return_code, return_msg, status, prepay_id, is_subscribe, create_time,
+        update_time,transaction_id
+        from wx_order
+
+        where 1=1
+        <if test="conditions.donateId!=null">
+           and `donate_id` = #{conditions.donateId}
+        </if>
+        <if test="conditions.status!=null">
+            and `status` in
+            <foreach item="item" index="index" collection="conditions.status"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+
+<!--    <select id="selectByPrimaryKey" resultMap="com.donate.dao.entity.WxOrder" parameterType="String" >-->
+<!--        select no, donate_id, return_code, return_msg, status, prepay_id, is_subscribe, create_time,-->
+<!--        update_time,transaction_id-->
+<!--        from  wx_order-->
+<!--        where no = #{no}-->
+<!--    </select>-->
+
+<!--    <delete id="deleteByPrimaryKey" parameterType="String">-->
+<!--        delete from  wx_order-->
+<!--        where no = #{no}-->
+<!--    </delete>-->
+
+<!--    <insert id="insert" parameterType="com.donate.dao.entity.WxOrder" >-->
+<!--        insert into  wx_order (-->
+<!--            no, donate_id, return_code, return_msg, status, prepay_id,-->
+<!--            is_subscribe, create_time, update_time,transaction_id)-->
+<!--        values (#{no}, #{donateId}, #{returnCode}, #{returnMsg},#{status}, #{prepayId}-->
+<!--        , #{isSubscribe}, sysdate(),sysdate(),#{transactionId})-->
+<!--    </insert>-->
+
+
+    <!--  parameterType="com.donate.common.model.Pagination"   -->
+    <select id="countByPagination" resultType="Integer" >
+        select count(*) from  wx_order
+    </select>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.donate.dao.entity.WxOrder" >
+        update  wx_order
+        <set>
+            <if test="donateId!=null">donate_id=#{donateId},</if>
+            <if test="return_code!=null">return_code=#{returnCode},</if>
+            <if test="return_msg!=null">return_msg=#{returnMsg},</if>
+            <if test="status!=null">status=#{status},</if>
+            <if test="prepay_id!=null">prepay_id=#{prepayId},</if>
+            <if test="is_subscribe!=null">is_subscribe=#{isSubscribe},</if>
+             <if test="create_time!=null">create_time=#{createTime},</if>
+            <if test="pay_time!=null">pay_time=#{payTime},</if>
+            <if test="transaction_id!=null">transaction_id=#{transactionId},</if>
+        </set>
+        ,update_time = sysdate()
+        where no = #{no}
+    </update>
+
+
+    <select id="getDonateOrder" resultMap="java.util.Map" parameterType="java.lang.String" >
+  		select  amount,status,o.no,donate_id,transaction_id,pay_time
+  		from donate
+  		inner join wx_order o on donate.id=o.donate_id
+  		where o.no=#{orderNo}
+    </select>
+
+</mapper>

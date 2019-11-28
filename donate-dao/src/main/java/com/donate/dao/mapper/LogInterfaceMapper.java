@@ -8,8 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LogInterfaceMapper extends BaseMapper<LogInterface> {
 
-
-
+    Integer addLogInterface(LogInterface logInterface)throws Exception;
 
 
 }

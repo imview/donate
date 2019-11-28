@@ -12,19 +12,18 @@ import java.util.Map;
 @Repository
 public interface DonateMapper extends BaseMapper<Donate> {
 
-    Integer countByPagination(Pagination pagination)throws Exception;
 
-    Integer deleteByPrimaryKey(String id)throws Exception;
+//    Integer deleteByPrimaryKey(String id)throws Exception;
 
-    Integer addDonate(Donate logInterface)throws Exception;
+//    Integer addDonate(Donate logInterface)throws Exception;
 
     List<Donate> selectByPagination(Pagination pagination) throws Exception;
 
     Donate selectById(String id)throws Exception;
 
-    List<Donate> selectAllDonationList(Pagination queryPgn);
+    List<Donate> selectAllDonationList(Pagination pagination);
 
-    BigDecimal selectTotalAmount(Pagination queryPgn);
+    BigDecimal selectTotalAmount(Pagination pagination);
 
     BigDecimal selectMyTotalAmount(Pagination pagination);
 

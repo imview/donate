@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.donate.dao.mapper.DonateMapper">
+
+        <!-- format(amount,2) as amountStr -->
+    <select id="selectByPagination" resultMap="com.donate.dao.entity.Donate" parameterType="com.donate.common.model.Pagination">
+        select id,amount,format(amount,2) as amountStr, user_name, mobile, class, period, open_id, nick_name, head_img_url,create_time
+        from donate
+        where 1=1
+        <if test="@com.donate.common.utils.StringUtils.isNotBlank(conditions.donateId) " >
+            and  `id` = #{conditions.donateId}
+        </if>
+        <if test="@com.donate.common.utils.StringUtils.isNotBlank(conditions.openId) ">
+            and `open_id` = #{conditions.openId}
+        </if>
+
+    </select>
+
+<!--    <select id="selectByPrimaryKey" resultMap="com.donate.dao.entity.Donate" parameterType="String" >-->
+
+<!--        select id,format(amount,2) as amountStr, amount, user_name, mobile, class, period,-->
+<!--            open_id, nick_name, head_img_url,create_time-->
+<!--        from donate-->
+<!--        where id = #{id}-->
+<!--    </select>-->
+
+<!--    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >-->
+<!--        delete from donate-->
+<!--        where id = #{id}-->
+<!--    </delete>-->
+
+<!--    <insert id="addDonate" parameterType="com.donate.dao.entity.Donate">-->
+<!--        INSERT INTO donate (id,amount,user_name,mobile,class,period,open_id,nick_name,head_img_url,wx_order_no,create_time)-->
+<!--        VALUES-->
+<!--        (#{id},#{amount},#{userName},0,#{mobile},#{class},#{period},#{openId},#{nickName},#{headImgUrl},#{wxOrderNo},sysdate())-->
+<!--    </insert>-->
+
+    <select id="selectAllDonationList" parameterType="com.donate.common.model.Pagination" resultMap="com.donate.dao.entity.Donate">
+        <![CDATA[
+	    	SELECT d.id,d.amount,format(d.amount,2) as amountStr,d.user_name,d.mobile,
+	    			d.class,d.period,d.open_id,d.nick_name,d.head_img_url, d.create_time
+	    	FROM   donate d
+	    	INNER JOIN wx_order o
+	    	ON o.donate_id = d.id
+
+	    	WHERE o.status = 1
+	    ]]>
+        <!-- 1 表示刷新 ,0表示下拉加载-->
+        <if test="conditions.type=='0' and conditions.time!=null">
+            <![CDATA[
+               and  d.`create_time` < #{conditions.time}
+            ]]>
+        </if>
+        <if test="conditions.type=='1' and conditions.time!=null">
+            <![CDATA[
+                and d.`create_time` >  #{conditions.time}
+            ]]>
+        </if>
+        <![CDATA[
+	    	 ORDER BY  d.create_time  desc
+      		 LIMIT #{fromRecord},#{pageSize}
+	     ]]>
+    </select>
+
+        <!--  	    	SELECT format(sum(amount),2) as amountStr   -->
+    <select id="selectTotalAmount" parameterType="com.donate.common.model.Pagination" resultMap="java.math.BigDecimal">
+        <![CDATA[
+	    	SELECT sum(d.amount) as amount
+	    	FROM   donate d
+	    	INNER JOIN wx_order o
+	    	ON o.donate_id = d.id
+	    	WHERE o.status = 1
+	    ]]>
+        <if test="conditions.time!=null">
+            <![CDATA[
+	            and  d.`create_time` < #conditions.time#
+	         ]]>
+        </if>
+
+    </select>
+
+    <select id="selectMyTotalAmount" parameterType="String" resultMap="java.math.BigDecimal">
+        <![CDATA[
+	    	SELECT sum(d.amount) as amount
+	    	FROM   donate d
+
+	    	INNER JOIN wx_order o
+	    	ON o.donate_id = d.id
+
+	    	WHERE o.status = 1
+	    	AND d.open_id = #{conditions.openId}
+	    ]]>
+        <if test="conditions.time != null" >
+            <![CDATA[
+	          and d.`create_time` < #{conditions.time}
+	         ]]>
+        </if>
+    </select>
+
+    <select id="selectMyDonationList" parameterType="com.donate.common.model.Pagination" resultMap="com.donate.dao.entity.Donate">
+        <![CDATA[
+	    	SELECT d.id,d.amount,format(d.amount,2) as amountStr,d.user_name,d.mobile,
+	    			d.class,d.period,d.open_id,d.nick_name,d.head_img_url, d.create_time
+	    	FROM   donate d
+	    	INNER JOIN wx_order o
+	    	ON o.donate_id = d.id
+	    	WHERE d.open_id = #{conditions.openId}
+	    	AND o.`status` = 1
+
+	     ]]>
+        <!-- 1 表示刷新 ,0表示下拉加载-->
+        <if test="conditions.type=='0' and conditions.time!=null">
+            <![CDATA[
+                 d.`create_time` < #{conditions.time}
+            ]]>
+        </if>
+        <if test="conditions.type=='1' and conditions.time!=null">
+            <![CDATA[
+                 d.`create_time` > #{conditions.time}
+            ]]>
+        </if>
+        <![CDATA[
+            ORDER BY  d.create_time  desc
+      		LIMIT #fromRecord#,#pageSize#
+         ]]>
+    </select>
+
+    <select id="selectDonateDetail" parameterType="String" resultMap="com.donate.dao.entity.Donate">
+        <![CDATA[
+	    	SELECT d.id,d.amount,format(d.amount,2) as amountStr,d.user_name,d.mobile,
+	    			d.class,d.period,d.open_id,d.nick_name,d.head_img_url, d.create_time
+	    	FROM   donate d
+	    	INNER JOIN wx_order o
+	    	ON o.donate_id = d.id
+	    	WHERE d.id = #{donateId}
+	    	AND o.status = 1
+        	LIMIT 0,1
+	     ]]>
+    </select>
+</mapper>
